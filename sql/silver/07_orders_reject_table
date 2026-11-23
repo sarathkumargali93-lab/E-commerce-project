@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS
+`mahesh2726.ecommerce01_history.orders_rejects`
+(
+  order_id STRING,
+  customer_id STRING,
+  product_id STRING,
+  quantity_raw STRING,
+  unit_price_raw STRING,
+  order_ts_raw STRING,
+  order_status STRING,
+  source_system STRING,
+  reject_reason STRING,
+  batch_date DATE,
+  source_file STRING,
+  rejected_at TIMESTAMP
+)
+PARTITION BY batch_date;
+
+
+DELETE FROM `mahesh2726.ecommerce01_history.orders_rejects`
+WHERE batch_date= DATE '2026-10-02';
+INSERT INTO `mahesh2726.ecommerce01_history.orders_rejects`
+(
+  order_id,
+  customer_id,
+  product_id,
+  quantity_raw,
+  unit_price_raw,
+  order_ts_raw,
+  order_status,
+  source_system,
+  reject_reason,
+  batch_date,
+  source_file,
+  rejected_at
+)
+SELECT 
+ order_id,
+ customer_id,
+ product_id,
+ quantity_raw,
+ unit_price_raw,
+ order_ts_raw,
+ order_status,
+ source_system,
+ reject_reason,
+ DATE '2026-10-02' AS batch_date,
+ 'orders_2026-10-02.csv' AS source_file,
+ CURRENT_TIMESTAMP() AS rejected_at
+FROM `mahesh2726.ecommerce01_staging.v_orders_validated`
+WHERE reject_reason IS NOT NULL

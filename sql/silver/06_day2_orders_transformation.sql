@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW `mahesh2726.ecommerce01_staging.v_orders_validated` AS
 WITH normalized_orders AS (
  SELECT
   NULLIF(TRIM(order_id),'') AS order_id,
